@@ -3,26 +3,18 @@
 #include "auton.h"
 #include "robot-config.hpp"
 
-static void drivePID(double kp, double ki, double kd, double target) {
+void drivePID(double kp, double ki, double kd, double target) {
     double lefterror = target;
     double plefterror = lefterror;
     double leftd = 0;
     double lefti = 0;
-    double reallefti = 0;
-    double plefttotal = 0;
     double lefttotal = 0;
-    double leftsaturation = 0;
-    double leftsign = 0;
 
     double righterror = target;
     double prighterror = righterror;
     double rightd = 0;
     double righti = 0;
-    double realrighti = 0;
-    double prighttotal = 0;
     double righttotal = 0;
-    double rightsaturation = 0;
-    double rightsign = 0;
     
     LeftDrive.resetPosition();
     RightDrive.resetPosition();
@@ -31,59 +23,21 @@ static void drivePID(double kp, double ki, double kd, double target) {
         lefterror = target - LeftDrive.position(turns) * 3.25 * M_PI * 0.75;
         righterror = target - RightDrive.position(turns) * 3.25 * M_PI * 0.75;
         
-        leftd = (lefterror - plefterror) * 40;
-        rightd = (righterror - prighterror) * 40;
+        leftd = (lefterror - plefterror) * 50;
+        rightd = (righterror - prighterror) * 50;
         
         lefttotal = lefterror * kp + lefti * ki - leftd * kd;
         righttotal = righterror * kp + righti * ki - rightd * kd;
 
-        if(plefttotal == lefttotal) {
-            leftsaturation = 0;
-        }
-        else {
-            leftsaturation = 1;
-        }
-        if((plefttotal < 0) && (lefttotal < 0)) {
-            leftsign = -1;
-        }
-        else {
-            leftsign = 1;
-        }
-
-        if(prighttotal == righttotal) {
-            rightsaturation = 0;
-        }
-        else {
-            rightsaturation = 1;
-        }
-        if((plefttotal < 0) && (lefttotal < 0)) {
-            rightsign = -1;
-        }
-        else {
-            rightsign = 1;
-        }
-
         LeftDrive.spin(forward, lefttotal, pct);
         RightDrive.spin(forward, righttotal, pct);
 
-        if((leftsaturation == 1) || (leftsign == 1 )) {
-            lefti = 0;
-        }
-        else {
-           lefti = reallefti; 
-        }
         if(fabs(lefterror) < 10) {
-            reallefti += lefterror / 50;
+            lefti += lefterror/50;
         }
         
-        if((rightsaturation == 1) || (rightsign == 1 )) {
-            righti = 0;
-        }
-        else {
-          righti = realrighti;  
-        }
         if(fabs(righterror) < 10) {
-            realrighti += righterror / 50;
+            righti += righterror/50;
         }
 
         plefterror = lefterror;
@@ -98,7 +52,7 @@ static void drivePID(double kp, double ki, double kd, double target) {
     wait(100, msec);
 }
 
-static double geterror(double target) {
+double geterror(double target) {
     if((std::max(target, Inertial.heading()) - std::min(target, Inertial.heading())) > 180) {
         if(std::min(target, Inertial.heading()) == target) {
             return (360 - std::max(target, Inertial.heading()) + std::min(target, Inertial.heading()));
@@ -112,44 +66,22 @@ static double geterror(double target) {
     }
 }
 
-static void turnPID(double kp, double ki, double kd, double tolerance, double target) {
+void turnPID(double kp, double ki, double kd, double tolerance, double target) {
     double error = geterror(target);
     double perror = error;
     double d = 0;
     double i = 0;
-    double reali = 0;
-    double ptotal  = 0;
     double total = 0;
-    double saturation = 0;
-    double sign = 0;
 
-    while(fabs(error) > tolerance || (d > 3)) {
+    Inertial.setHeading(0, deg);
+    while(fabs(error) > tolerance) {
         error = geterror(target);
-        d = (error - perror) * 40;
-        ptotal = total;
+        d = (error - perror) * 50;
         total = error * kp + i * ki - d * kd;
-        if(ptotal == total) {
-            saturation = 0;
-        }
-        else {
-            saturation = 1;
-        }
-        if((ptotal < 0) && (total < 0)) {
-            sign = -1;
-        }
-        else {
-            sign = 1;
-        }
         
         LeftDrive.spin(forward, total, pct);
         RightDrive.spin(reverse, total, pct);
 
-        if((saturation == 1) && (sign == 1)) {
-            i = 0;
-        }
-        else {
-            i = reali;
-        }
         if(fabs(error) < 20) {
             i += error/50;
         }
@@ -167,26 +99,26 @@ static void turnPID(double kp, double ki, double kd, double tolerance, double ta
 
 void drive(std::string direction, double target) {
     if(direction == "forward") {            
-        drivePID(1.75, 0.001, 0.775, target);
+        drivePID(1.7, 0.001, 0.66, target);
     }
 
     if(direction == "reverse") {
-        drivePID(1.75, 0.001, 0.775, -target);
+        drivePID(1.7, 0.001, 0.66, -target);
     }
 }
 
 void slowdrive(std::string direction, double target) {
     if(direction == "forward") {            
-        drivePID(1.3, 0.001, 0.75, target);
+        drivePID(1.3, 0.001, 0.66, target);
     }
 
     if(direction == "reverse") {
-        drivePID(1.3, 0.001, 0.75, -target);
+        drivePID(1.3, 0.001, 0.66, -target);
     }
 }
 
 void turn(double target) {
-    turnPID(0.4, 0.002, 0, 1, target);
+    turnPID(0.397, 0.002, 0, 1, target);
 }
 
 void slowturn(double target){
@@ -194,11 +126,11 @@ void slowturn(double target){
 }
 
 void DrivePID_Test() {
-    drive(0);
+    drive("forward", 24);
 }
 
-void TurnPID_UnitTest() {
-    turn(0);
+void TurnPID_Test() {
+    turn(180);
 }
 
 void AWPRed() {
@@ -210,7 +142,7 @@ void AWPBlue() {
 }
 
 void Red() {
-    
+
 }
 
 void Blue() {
