@@ -1,6 +1,7 @@
 #ifndef AUTON_H
 #define AUTON_H
 
+double geterror(double);
 void turn(double);
 void slowturn(double);
 void drive(std::string, double);
