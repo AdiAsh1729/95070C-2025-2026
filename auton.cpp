@@ -26,8 +26,8 @@ void drivePID(double kp, double ki, double kd, double target) {
         leftd = (lefterror - plefterror) * 50;
         rightd = (righterror - prighterror) * 50;
         
-        lefttotal = lefterror * kp + lefti * ki - leftd * kd;
-        righttotal = righterror * kp + righti * ki - rightd * kd;
+        lefttotal = lefterror * kp + lefti * ki + leftd * kd;
+        righttotal = righterror * kp + righti * ki + rightd * kd;
 
         LeftDrive.spin(forward, lefttotal, pct);
         RightDrive.spin(forward, righttotal, pct);
@@ -77,7 +77,7 @@ void turnPID(double kp, double ki, double kd, double tolerance, double target) {
     while(fabs(error) > tolerance) {
         error = geterror(target);
         d = (error - perror) * 50;
-        total = error * kp + i * ki - d * kd;
+        total = error * kp + i * ki + d * kd;
         
         LeftDrive.spin(forward, total, pct);
         RightDrive.spin(reverse, total, pct);
@@ -99,30 +99,16 @@ void turnPID(double kp, double ki, double kd, double tolerance, double target) {
 
 void drive(std::string direction, double target) {
     if(direction == "forward") {            
-        drivePID(1.7, 0.001, 0.66, target);
+        drivePID(0, 0, 0, target);
     }
 
     if(direction == "reverse") {
-        drivePID(1.7, 0.001, 0.66, -target);
-    }
-}
-
-void slowdrive(std::string direction, double target) {
-    if(direction == "forward") {            
-        drivePID(1.3, 0.001, 0.66, target);
-    }
-
-    if(direction == "reverse") {
-        drivePID(1.3, 0.001, 0.66, -target);
+        drivePID(0, 0, 0, -target);
     }
 }
 
 void turn(double target) {
-    turnPID(0.397, 0.002, 0, 1, target);
-}
-
-void slowturn(double target){
-    turnPID(0.3, 0.002, 0, 1, target);
+    turnPID(0, 0, 0, 0, target);
 }
 
 void DrivePID_Test() {
