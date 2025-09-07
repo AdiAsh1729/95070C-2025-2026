@@ -54,59 +54,56 @@ void MoveDrivetrain() {
         LeftSpeed = 0;
         RightSpeed = 0;
     }
-    else {
-        LeftSpeed = DriveSpeed - TurnSpeed + correctionPID(currentheading);
-        RightSpeed = DriveSpeed + TurnSpeed - correctionPID(currentheading);
+    
+    if (DriveSpeed != 0 && TurnSpeed == 0) {
+        LeftSpeed = DriveSpeed + TurnSpeed - correctionPID(currentheading);
+        RightSpeed = DriveSpeed - TurnSpeed + correctionPID(currentheading);
     }
+    else {
+        LeftSpeed = (DriveSpeed + TurnSpeed);
+        RightSpeed = (DriveSpeed - TurnSpeed);
+    }
+
     LeftDrive.spin(forward, LeftSpeed, pct);
     RightDrive.spin(forward, RightSpeed, pct);
 }
 
 void MoveIntake() {
     if(Controller.ButtonR1.pressing()) {
-        Store.spin(reverse, 12, volt);
-        Intake1.spin(forward, 12, volt);
-        Intake2.spin(reverse, 12, volt);
-        Intake3.spin(forward, 12, volt);
+        Intake1.spin(reverse, 12, volt);
     }
-
+    
+    if(Controller.ButtonR2.pressing()) {
+        Intake1.spin(forward, 12, volt);
+    }
+    
     if(Controller.ButtonL1.pressing()) {
-        Store.spin(reverse, 12, volt);
-        Intake1.spin(forward, 12, volt);
-        Intake2.spin(reverse, 12, volt);
-        Intake3.spin(reverse, 12, volt);
-    }
-
-    if(Controller.ButtonR2.pressing()){
-        Store.spin(forward, 12, volt);
-        Intake1.spin(forward, 12, volt);
-        Intake2.spin(forward, 12, volt);
+        Intake.spin(reverse, 12, volt);
     }
 
     if(Controller.ButtonL2.pressing()) {
-        Store.spin(reverse, 12, volt);
-        Intake1.spin(reverse, 12, volt);
-        Intake2.spin(reverse, 12,  volt);
+        Intake.spin(forward, 12, volt);
     }
 
     if(Controller.ButtonB.pressing()) {
-        Store.stop();
-        Intake1.stop();
-        Intake2.stop();
-        Intake3.stop();
+        Intake.stop();
+    }
+
+    if(Intake1.isSpinning() && fabs(Intake1.velocity(rpm)) < 25) {
+        Intake1.spin(reverse);
     }
 }
 
-void MoveTopScorer() {
-    static int tspressed = 0;
-    tspressed += 1;
+void DoublePark() {
+    static int parkpressed = 0;
+    parkpressed += 1;
 
-    if(tspressed%2 == 0) {
-        PL.set(true);
+    if(parkpressed%2 == 0) {
+        Park.set(true);
     }
 
-    else if(tspressed%2 == 1) {
-        PL.set(false);
+    else if(parkpressed%2 == 1) {
+        Park.set(false);
     }
 }
 
@@ -114,7 +111,7 @@ void drivercontrol() {
     while(true){
       MoveDrivetrain();
       MoveIntake();
-      Controller.ButtonY.pressed(MoveTopScorer);
+      Controller.ButtonX.pressed(DoublePark);
       wait(20, msec);
     }
 }
