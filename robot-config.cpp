@@ -9,22 +9,23 @@ brain Brain;
 controller Controller;
 
 
-motor FL = motor(PORT1, ratio6_1, false);
-motor ML = motor(PORT3, ratio6_1, false);
-motor BL = motor(PORT15, ratio6_1, false);
+motor FL = motor(PORT4, ratio6_1, true);
+motor ML = motor(PORT7, ratio6_1, true);
+motor BL = motor(PORT2, ratio6_1, true);
 motor_group LeftDrive = motor_group(FL, ML, BL);
-motor FR = motor(PORT16, ratio6_1, true);
-motor MR = motor(PORT19, ratio6_1, true);
-motor BR = motor(PORT17, ratio6_1, true);
+motor FR = motor(PORT5, ratio6_1, false);
+motor MR = motor(PORT6, ratio6_1, false);
+motor BR = motor(PORT3, ratio6_1, false);
 motor_group RightDrive = motor_group(FR, MR, BR);
 
-motor Store = motor(PORT18, ratio6_1, true);
-motor Intake1 = motor(PORT14, ratio18_1, false);
-motor Intake2 = motor(PORT10, ratio18_1, false);
-motor Intake3 = motor(PORT11, ratio18_1, false);
+motor Intake1 = motor(PORT1, ratio18_1, true);
+motor Intake2 = motor(PORT16, ratio18_1, false);
+motor_group Intake = motor_group(Intake1, Intake2);
 
-digital_out PL = digital_out(Brain.ThreeWirePort.A);
+digital_out MP = digital_out(Brain.ThreeWirePort.B);
+digital_out Park = digital_out(Brain.ThreeWirePort.A);
 
-inertial Inertial = inertial(PORT11);
+inertial Inertial = inertial(PORT8);
+rotation Rotation = rotation(PORT22, true);
 
 void vexcodeInit(void);
