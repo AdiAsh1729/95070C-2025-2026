@@ -14,13 +14,14 @@ extern motor MR;
 extern motor BR;
 extern motor_group RightDrive;
 
-extern motor Store;
 extern motor Intake1;
 extern motor Intake2;
-extern motor Intake3;
+extern motor_group Intake;
 
-extern digital_out PL;
+extern digital_out MP;
+extern digital_out Park;
 
 extern inertial Inertial;
+extern rotation Rotation;
 
 void vexcodeInit(void);
