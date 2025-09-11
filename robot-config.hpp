@@ -20,6 +20,7 @@ extern motor_group Intake;
 
 extern digital_out MP;
 extern digital_out Park;
+extern digital_out Middle;
 
 extern inertial Inertial;
 extern rotation Rotation;
