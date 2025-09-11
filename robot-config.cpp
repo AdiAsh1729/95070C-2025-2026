@@ -25,6 +25,7 @@ motor_group Intake = motor_group(Intake1, Intake2);
 digital_out MP = digital_out(Brain.ThreeWirePort.A);
 digital_out Park = digital_out(Brain.ThreeWirePort.B);
 digital_out Park_two = digital_out(Brain.ThreeWirePort.C);
+digital_out_group Park_group = digital_out_group(Park, Park_two)
 
 inertial Inertial = inertial(PORT8);
 rotation Rotation = rotation(PORT22, true);
