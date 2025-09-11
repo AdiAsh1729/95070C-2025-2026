@@ -112,11 +112,11 @@ void MiddleGoal() {
     middlepressed += 1;
 
     if(middlepressed%2 == 0) {
-        Middle.set(true);
+        MP.set(true);
     }
 
     else if(middlepressed%2 == 1) {
-        Middle.set(false);
+        MP.set(false);
     }
 }
 
