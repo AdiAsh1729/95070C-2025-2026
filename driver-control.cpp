@@ -99,11 +99,11 @@ void DoublePark() {
     parkpressed += 1;
 
     if(parkpressed%2 == 0) {
-        Park.set(true);
+        Park_two.set(true);
     }
 
     else if(parkpressed%2 == 1) {
-        Park.set(false);
+        Park_two.set(false);
     }
 }
 
