@@ -45,7 +45,7 @@ void MoveDrivetrain() {
     }
     
     double DriveSpeed = (Controller.Axis3.position()) * 0.99 * TempSpeed;
-    double TurnSpeed = (Controller.Axis1.position()) * 0.99 * TempSpeed;
+    double TurnSpeed = (Controller.Axis1.position()) * 0.95 * TempSpeed;
     double LeftSpeed = 0;
     double RightSpeed = 0;
     double currentheading = Inertial.heading(deg);
@@ -69,11 +69,11 @@ void MoveDrivetrain() {
 }
 
 void MoveIntake() {
-    if(Controller.ButtonR1.pressing()) {
+    if(Controller.ButtonR2.pressing()) {
         Intake1.spin(reverse, 12, volt);
     }
     
-    if(Controller.ButtonR2.pressing()) {
+    if(Controller.ButtonR1.pressing()) {
         Intake1.spin(forward, 12, volt);
     }
     
@@ -99,24 +99,24 @@ void DoublePark() {
     parkpressed += 1;
 
     if(parkpressed%2 == 0) {
-        Park_two.set(true);
+        Park1.set(true);
     }
 
-    else if(parkpressed%2 == 1) {
-        Park_two.set(false);
+    if(parkpressed%2 == 1) {
+        Park1.set(false);
     }
 }
 
-void MiddleGoal() {
-    static int middlepressed = 0;
-    middlepressed += 1;
+void MiddleGoalUse() {
+    static int middlegoal = 0;
+    middlegoal += 1;
 
-    if(middlepressed%2 == 0) {
-        MP.set(true);
+    if(middlegoal%2 == 0) {
+        MiddleGoal.set(true);
     }
 
-    else if(middlepressed%2 == 1) {
-        MP.set(false);
+    if(middlegoal%2 == 1) {
+        MiddleGoal.set(false);
     }
 }
 
@@ -124,7 +124,8 @@ void drivercontrol() {
     while(true){
       MoveDrivetrain();
       MoveIntake();
-      Controller.ButtonX.pressed(DoublePark);
+      Controller.ButtonLeft.pressed(DoublePark);
+      Controller.ButtonA.pressed(MiddleGoalUse);
       wait(20, msec);
     }
 }
