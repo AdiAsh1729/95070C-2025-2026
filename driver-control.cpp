@@ -70,11 +70,11 @@ void MoveDrivetrain() {
 
 void MoveIntake() {
     if(Controller.ButtonR2.pressing()) {
-        Intake1.spin(reverse, 12, volt);
+        Intake1.spin(forward, 12, volt);
     }
     
     if(Controller.ButtonR1.pressing()) {
-        Intake1.spin(forward, 12, volt);
+        Intake1.spin(reverse, 12, volt);
     }
     
     if(Controller.ButtonL1.pressing()) {
@@ -89,9 +89,9 @@ void MoveIntake() {
         Intake.stop();
     }
 
-    if(Intake1.isSpinning() && fabs(Intake1.velocity(rpm)) < 25) {
+   /*if(Intake1.isSpinning() && fabs(Intake1.velocity(rpm)) < 25) {
         Intake1.spin(reverse);
-    }
+    }*/
 }
 
 void DoublePark() {
@@ -112,11 +112,37 @@ void MiddleGoalUse() {
     middlegoal += 1;
 
     if(middlegoal%2 == 0) {
-        MiddleGoal.set(true);
+        MP.set(true);
     }
 
     if(middlegoal%2 == 1) {
-        MiddleGoal.set(false);
+        MP.set(false);
+    }
+}
+
+void MatchLoad() {
+    static int matchload = 0;
+    matchload += 1;
+
+    if(matchload%2 == 0) {
+        Load.set(true);
+    }
+
+    if(matchload%2 == 1) {
+        Load.set(false);
+    }
+}
+
+void BunnyEar() {
+    static int bunnyear = 0;
+    bunnyear += 1;
+
+    if(bunnyear%2 == 0) {
+        Bunny.set(true);
+    }
+
+    if(bunnyear%2 == 1) {
+        Bunny.set(false);
     }
 }
 
