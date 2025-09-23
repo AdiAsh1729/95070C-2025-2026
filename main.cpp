@@ -1,174 +1,77 @@
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*    Module:       main.cpp                                                  */
+/*    Author:       Redwood Robotics                                          */
+/*    Created:      9/19/2025, 3:55:07 PM                                     */
+/*    Description:  V5 project                                                */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+
 #include "vex.h"
 #include "driver-control.hpp"
-#include <iostream>
-#include "auton.h"
-#include <cstdlib>
-#include "robot-config.hpp"
+
 using namespace vex;
-using signature = vision::signature;
-using code = vision::code;
 
-
+// A global instance of competition
 competition Competition;
-bool inauton = false;
 
+// define your global instances of motors and other devices here
 
-void vexcodeInit() {
-
-}
-
-int autons = 11;
-int displayautons = 0;
-
-void select(){
-  while(1) {
-    if (Controller.ButtonRight.pressing()) {
-      displayautons++;
-    }
-    
-    if (Controller.ButtonLeft.pressing()) {
-      displayautons--;
-    }
-
-    if (Controller.ButtonA.pressing()) {
-      wait(1000, msec);
-      if (Controller.ButtonA.pressing()) {
-        Controller.rumble(rumbleLong);
-        break;
-      }
-    }
-    
-    if (displayautons > autons) {
-      displayautons = 0;
-    }
-
-    if (displayautons < 0) {
-      displayautons = autons;
-    }
-
-    if (displayautons == 0) {
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("Please select an auton");
-    }
-
-    if (displayautons == 1){
-      Controller.Screen.clearScreen();
-      Controller.Screen.setCursor(1, 1);
-      Controller.Screen.print("DrivePID_Test");
-    }
-
-    if (displayautons == 2){
-      Controller.Screen.clearScreen();
-      Controller.Screen.setCursor(1, 1);
-      Controller.Screen.print("TurnPID_Test");
-    }
-    
-    if (displayautons == 3){
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("AWPRed");
-    }
-    
-    if (displayautons == 4){
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("AWPBlue");
-    }
-    
-    if (displayautons == 5){
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("Red");
-    }
-    
-    if (displayautons == 6){
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("Blue");
-    }
-
-    if (displayautons == 7){
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("GoalRushRed");
-    }
-
-    if (displayautons == 8){
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("GoalRushBlue");
-    }
-
-    if (displayautons == 9){
-        Controller.Screen.clearScreen();
-        Controller.Screen.setCursor(1, 1);
-        Controller.Screen.print("AutonSkills");
-    }
-
-  }
-}
+/*---------------------------------------------------------------------------*/
+/*                          Pre-Autonomous Functions                         */
+/*                                                                           */
+/*  You may want to perform some actions before the competition starts.      */
+/*  Do them in the following function.  You must return from this function   */
+/*  or the autonomous and usercontrol tasks will not be started.  This       */
+/*  function is only called once after the V5 has been powered on and        */
+/*  not every time that the robot is disabled.                               */
+/*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-  
-  select();
-  vexcodeInit();
 
+  // All activities that occur before the competition starts
+  // Example: clearing encoders, setting servo positions, ...
 }
+
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                              Autonomous Task                              */
+/*                                                                           */
+/*  This task is used to control your robot during the autonomous phase of   */
+/*  a VEX Competition.                                                       */
+/*                                                                           */
+/*  You must modify the code to add your own robot specific commands here.   */
+/*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  
-  inauton = true;
-  
-  if(displayautons == 1) {
-    drivePID_Test();
-  }
-
-  if(displayautons == 2) {
-    TurnPID_Test();
-  }
-
-  if(displayautons == 3) {
-    AWPRed();
-  }
-  
-  if(displayautons == 4) {
-    AWPBlue();
-  }
-  
-  if(displayautons == 5) {
-    Red();
-  }
-  
-  if(displayautons == 6) {
-    Blue();
-  }
-
-  if(displayautons == 7) {
-    GoalRushRed();
-  }
-
-  if(displayautons == 8) {
-    GoalRushBlue();
-  }
-
-  if(displayautons == 9) {
-    AutonSkills();
-  }
-  
-  inauton=false;
-
+  // ..........................................................................
+  // Insert autonomous user code here.
+  // ..........................................................................
 }
 
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                              User Control Task                            */
+/*                                                                           */
+/*  This task is used to control your robot during the user control phase of */
+/*  a VEX Competition.                                                       */
+/*                                                                           */
+/*  You must modify the code to add your own robot specific commands here.   */
+/*---------------------------------------------------------------------------*/
+
+//
+// Main will set up the competition functions and callbacks.
+//
 int main() {
-  Competition.drivercontrol(drivercontrol);
+  // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
+  Competition.drivercontrol(drivercontrol);
 
+  // Run the pre-autonomous function.
   pre_auton();
-  
-  while(1) {
-    wait(20, msec);
-  }
-  void vexcodeInit(void);
 
+  // Prevent main from exiting with an infinite loop.
+  while (true) {
+    wait(100, msec);
+  }
 }
