@@ -19,9 +19,10 @@ extern motor Intake2;
 extern motor_group Intake;
 
 extern digital_out MP;
-extern digital_out Park;
-extern digital_out Park_two;
-extern digital_out_group Park_group
+extern digital_out Park1;
+extern digital_out Park2;
+extern digital_out Load;
+extern digital_out Bunny;
 
 extern inertial Inertial;
 extern rotation Rotation;
