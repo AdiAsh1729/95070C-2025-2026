@@ -70,19 +70,19 @@ void MoveDrivetrain() {
 
 void MoveIntake() {
     if(Controller.ButtonR2.pressing()) {
-        Intake1.spin(forward, 12, volt);
-    }
-    
-    if(Controller.ButtonR1.pressing()) {
         Intake1.spin(reverse, 12, volt);
     }
     
+    if(Controller.ButtonR1.pressing()) {
+        Intake1.spin(forward, 12, volt);
+    }
+    
     if(Controller.ButtonL1.pressing()) {
-        Intake.spin(reverse, 12, volt);
+        Intake.spin(forward, 12, volt);
     }
 
     if(Controller.ButtonL2.pressing()) {
-        Intake.spin(forward, 12, volt);
+        Intake.spin(reverse, 12, volt);
     }
 
     if(Controller.ButtonB.pressing()) {
@@ -151,7 +151,8 @@ void drivercontrol() {
       MoveDrivetrain();
       MoveIntake();
       Controller.ButtonLeft.pressed(DoublePark);
-      Controller.ButtonA.pressed(MiddleGoalUse);
+      Controller.ButtonB.pressed(MiddleGoalUse);
+      Controller.ButtonRight.pressed(MatchLoad);
       wait(20, msec);
     }
 }
